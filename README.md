@@ -1,5 +1,5 @@
 # farmrlabs
-Farm Management Software
+Farm Management REST API
 
 REST API solution for farm management. 
 Farmr Labs helps farmers create web apps to manage livestocks, crops, and resources
