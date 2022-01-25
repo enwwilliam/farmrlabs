@@ -1,0 +1,738 @@
+swagger: "2.0"
+info:
+  description: "This is Farmr Labs API documentation. Farmr Labs is a farm software management REST API."
+  version: "1.0.0"
+  title: "Farmr Labs API"
+  contact:
+    email: "enwwilliam@gmail.com"
+host: "farmrlabs.herokuapp.com"
+basePath: "/v1/developer"
+tags:
+- name: "general"
+  description: "Signing up and getting all objects"
+- name: "animal"
+  description: "Everything about your Animals"
+- name: "crop"
+  description: "Everything about your Crops"
+- name: "resource"
+  description: "Everything about your Resources"
+
+schemes:
+- "https"
+- "http"
+consumes: 
+  - application/json
+produces:
+  - application/json
+paths:
+  /signup:
+    post: 
+      tags:
+        - "general"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      description:
+        "Sign up to Farmr Labs"
+      parameters:
+      - name: "name"
+        in: "body"
+        required: true
+        type: "string"
+      - name: "email"
+        in: "body"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "body"
+        required: true
+        type: "string"
+      responses:
+        "200": 
+          description: "OK"
+        "400":
+          description: "Error in signing up"
+  
+  /:
+    get: 
+      tags: 
+        - "general"
+      produces:
+      - "application/json"
+      description:
+        "Get all animal, crop, resource objects"
+      parameters:
+      - name: "email"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "header"
+        required: true
+        type: "string"
+      responses:
+        "200": 
+          description: "OK"
+        "400":
+          description: "Error in getting all objects"
+        
+      
+  /animal:
+    get:
+      tags:
+      - "animal"
+      summary: "Get all animal objects"
+      description: ""
+      operationId: "addPet"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "email"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "header"
+        required: true
+        type: "string"
+      responses:
+        "200": 
+          description: "OK"
+        "400":
+          description: "Error in getting animal objects"
+    post:
+      tags:
+      - "animal"
+      summary: "Add new animal object"
+      description: ""
+      operationId: "addPet"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "email"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "header"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "name"
+        description: "name of animal"
+        required: true
+        schema:
+          type: string
+      - in: "body"
+        name: "quantity"
+        description: "amount of animal"
+        required: false
+        schema: 
+          type: integer
+      - in: "body"
+        name: "intervalFood"
+        description: "days of interval to give food"
+        required: false
+        schema: 
+          type: number
+      responses:
+        "200": 
+          description: "OK"
+        "400":
+          description: "Error in creating animal object"
+          
+    delete:
+      tags:
+      - "animal"
+      summary: "Delete all animals"
+      description: ""
+      operationId: "deleteAnimals"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "email"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "header"
+        required: true
+        type: "string"
+      responses:
+        "200": 
+          description: "OK"
+        "400":
+          description: "Error in deleting animal objects"
+
+  /animal/{animalId}:
+    get:
+      tags:
+      - "animal"
+      summary: "Get specific animal"
+      description: ""
+      operationId: "addPet"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "animalId"
+        in: "parameter"
+        required: true
+      - name: "email"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "header"
+        required: true
+        type: "string"
+      responses:
+        "200": 
+          description: "OK"
+        "400":
+          description: "Error in getting specific animal object"
+    patch:
+      tags:
+      - "animal"
+      summary: "Update existing animal object"
+      description: "Only update parameters that you provide"
+      operationId: "updatePet"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "animalId"
+        in: "parameter"
+        required: true
+      - name: "email"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "body"
+        in: "body"
+        description: "body to update animal" 
+        required: false
+        schema:
+          $ref: "#/definitions/Animal"
+
+      responses:
+        "200": 
+          description: "OK"
+        "400":
+          description: "Error in updating animal object"
+          
+    delete:
+      tags:
+      - "animal"
+      summary: "Delete specific animal"
+      description: ""
+      operationId: "deletePet"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "animalId"
+        in: "parameter"
+        required: true
+      - name: "email"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "header"
+        required: true
+        type: "string"
+      responses:
+        "200": 
+          description: "OK"
+        "400":
+          description: "Error in deleting animal object"
+  
+  /crop:
+    get:
+      tags:
+      - "crop"
+      summary: "Get all crop objects"
+      description: ""
+      operationId: "addCrop"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "email"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "header"
+        required: true
+        type: "string"
+      responses:
+        "200": 
+          description: "OK"
+        "400":
+          description: "Error in getting crop objects"
+    post:
+      tags:
+      - "crop"
+      summary: "Add new crop object"
+      description: ""
+      operationId: "addPet"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "email"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "header"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "name"
+        description: "name of crop"
+        required: true
+        schema:
+          type: string
+      - in: "body"
+        name: "quantity"
+        description: "amount of crops"
+        required: false
+        schema: 
+          type: number
+      - in: "body"
+        name: "unit"
+        description: "unit of quantity"
+        required: false
+        schema: 
+          type: string
+      - in: "body"
+        name: "intervalGive"
+        description: "days of interval to give resources to crop like water"
+        required: false
+        schema: 
+          type: number
+      responses:
+        "200": 
+          description: "OK"
+        "400":
+          description: "Error in creating crop object"
+          
+    delete:
+      tags:
+      - "crop"
+      summary: "Delete all crops"
+      description: ""
+      operationId: "deleteCrops"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "email"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "header"
+        required: true
+        type: "string"
+      responses:
+        "200": 
+          description: "OK"
+        "400":
+          description: "Error in deleting crop objects"
+
+  /crop/{cropId}:
+    get:
+      tags:
+      - "crop"
+      summary: "Get specific crop"
+      description: ""
+      operationId: "addPet"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "cropId"
+        in: "parameter"
+        required: true
+      - name: "email"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "header"
+        required: true
+        type: "string"
+      responses:
+        "200": 
+          description: "OK"
+        "400":
+          description: "Error in getting specific crop object"
+    patch:
+      tags:
+      - "crop"
+      summary: "Update existing crop object"
+      description: "Only update parameters that you provide"
+      operationId: "updateCrop"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "cropId"
+        in: "parameter"
+        required: true
+      - name: "email"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "body"
+        in: "body"
+        description: "body to update crop" 
+        required: false
+        schema:
+          $ref: "#/definitions/Crop"
+
+      responses:
+        "200": 
+          description: "OK"
+        "400":
+          description: "Error in updating crop object"
+          
+    delete:
+      tags:
+      - "crop"
+      summary: "Delete specific crop"
+      description: ""
+      operationId: "deleteCrop"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "cropId"
+        in: "parameter"
+        required: true
+      - name: "email"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "header"
+        required: true
+        type: "string"
+      responses:
+        "200": 
+          description: "OK"
+        "400":
+          description: "Error in deleting animal object"
+          
+          
+          
+  
+  /resource:
+    get:
+      tags:
+      - "resource"
+      summary: "Get all resource objects"
+      description: ""
+      operationId: "getResources"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "email"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "header"
+        required: true
+        type: "string"
+      responses:
+        "200": 
+          description: "OK"
+        "400":
+          description: "Error in getting resource objects"
+    post:
+      tags:
+      - "resource"
+      summary: "Add new resource object"
+      description: ""
+      operationId: "addResource"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "email"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "header"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "name"
+        description: "name of resource"
+        required: true
+        schema:
+          type: string
+      - in: "body"
+        name: "quantity"
+        description: "amount of crops"
+        required: false
+        schema: 
+          type: number
+      - in: "body"
+        name: "unit"
+        description: "unit of quantity"
+        required: false
+        schema: 
+          type: string
+      responses:
+        "200": 
+          description: "OK"
+        "400":
+          description: "Error in creating resource object"
+          
+    delete:
+      tags:
+      - "resource"
+      summary: "Delete all resource"
+      description: ""
+      operationId: "deleteResources"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "email"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "header"
+        required: true
+        type: "string"
+      responses:
+        "200": 
+          description: "OK"
+        "400":
+          description: "Error in deleting resource objects"
+
+  /resource/{resourceId}:
+    get:
+      tags:
+      - "resource"
+      summary: "Get specific resource"
+      description: ""
+      operationId: "getResource"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "resourceId"
+        in: "parameter"
+        required: true
+      - name: "email"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "header"
+        required: true
+        type: "string"
+      responses:
+        "200": 
+          description: "OK"
+        "400":
+          description: "Error in getting specific resource object"
+    patch:
+      tags:
+      - "resource"
+      summary: "Update existing resource object"
+      description: "Only update parameters that you provide"
+      operationId: "updateResource"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "resourceId"
+        in: "parameter"
+        required: true
+      - name: "email"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "body"
+        in: "body"
+        description: "body to update resource" 
+        required: false
+        schema:
+          $ref: "#/definitions/Resource"
+
+      responses:
+        "200": 
+          description: "OK"
+        "400":
+          description: "Error in updating resource object"
+          
+    delete:
+      tags:
+      - "resource"
+      summary: "Delete specific resource"
+      description: ""
+      operationId: "deleteResource"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "resourceId"
+        in: "parameter"
+        required: true
+      - name: "email"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "header"
+        required: true
+        type: "string"
+      responses:
+        "200": 
+          description: "OK"
+        "400":
+          description: "Error in deleting resource object"
+
+  /use/resource/{resourceId}:
+    patch:
+      tags:
+      - "resource"
+      summary: "Use resource"
+      description: "Only update parameters that you provide"
+      operationId: "updateResource"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "resourceId"
+        in: "parameter"
+        required: true
+      - name: "email"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "quantityUsed"
+        in: "body"
+        description: "quantity resource used, unit will follow resource unit" 
+        required: true
+      responses:
+        "200": 
+          description: "OK"
+        "400":
+          description: "Error in using resource object"
+
+securityDefinitions:
+  BasicAuth:
+    type: "basic"
+    in: "header"
+definitions:
+  User:
+    type: "object"
+    required:
+    - "name"
+    - "email"
+    - "password"
+    properties:
+      _id:
+        type: "ObjectId"
+      name:
+        type: "string"
+      email:
+        type: "string"
+      password:
+        type: "string"
+  Animal:
+    type: "object"
+    required:
+    - "name"
+    properties:
+      _id:
+        type: "ObjectId"
+      name:
+        type: "string"
+        example: "chicken 1"
+      integerOnly:
+        type: "integer"
+        format: "int32"
+      intervalFood:
+        type: "number"
+      schedule:
+        type: "date"
+      createdAt:
+        type: "date"
+      _user: 
+        type: "ObjectId"
+  Crop:
+    type: "object"
+    required:
+    - "name"
+    properties:
+      _id:
+        type: "ObjectId"
+      name:
+        type: "string"
+        example: "corn 1"
+      quantity:
+        type: "integer"
+        format: "int32"
+      unit:
+        type: "string"
+      intervalGive:
+        type: "number"
+      schedule:
+        type: "date"
+      createdAt:
+        type: "date"
+      _user: 
+        type: "ObjectId"
+        
+  Resource:
+    type: "object"
+    required:
+    - "name"
+    properties:
+      _id:
+        type: "ObjectId"
+      name:
+        type: "string"
+        example: "water 1"
+      quantity:
+        type: "integer"
+        format: "int32"
+      unit:
+        type: "string"
+      createdAt:
+        type: "date"
+      _user: 
+        type: "ObjectId"
+
+externalDocs:
+  description: "Find out more about Farmr Labs"
+  url: "https://github.com/enwwilliam/farmrlabs"
