@@ -53,7 +53,33 @@ paths:
           description: "OK"
         "400":
           description: "Error in signing up"
-  
+
+  /reset-password:
+    post: 
+      tags: 
+        - "general"
+      produces:
+      - "application/json"
+      description:
+        "Reset password"
+      parameters:
+      - name: "email"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "newPassword"
+        in: "body"
+        required: true
+        type: "string" 
+      responses:
+        "200": 
+          description: "OK"
+        "400":
+          description: "Error in resetting password"
   /:
     get: 
       tags: 
@@ -75,8 +101,7 @@ paths:
         "200": 
           description: "OK"
         "400":
-          description: "Error in getting all objects"
-        
+          description: "Error in getting all objects"      
       
   /animal:
     get:

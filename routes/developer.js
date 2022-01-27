@@ -13,8 +13,12 @@ const Resource = mongoose.model('Resource');
 //sign up to farmr lab
 router.post('/signup', developerController.signup);
 
+//reset password
+router.post('/reset-password', auth,developerController.resetPassword);
+
 //get all objects (animals, crops, and resources)
 router.get('/', auth, developerController.getAll);
+
 
 //get animal objects
 router.get('/animal', auth, developerController.getAnimals);
@@ -34,6 +38,7 @@ router.get('/resource/:resourceId', auth, developerController.getSpecificResourc
 //get resource objects
 router.get('/resource', auth, developerController.getResources);
 
+
 //create animal object
 router.post('/animal', auth, developerController.addAnimal);
 
@@ -42,6 +47,7 @@ router.post('/crop', auth, developerController.addCrop);
 
 //create resource object
 router.post('/resource', auth, developerController.addResource);
+
 
 //patch animal object
 router.patch('/animal/:animalId', auth, developerController.updateAnimal);
@@ -52,6 +58,16 @@ router.patch('/crop/:cropId', auth, developerController.updateCrop);
 //patch resource object
 router.patch('/resource/:resourceId', auth, developerController.updateResource);
 
+
+// //delete all animal objects
+router.delete('/animal/', auth, developerController.deleteAllAnimals);
+
+// //delete all crop objects
+router.delete('/crop/', auth, developerController.deleteAllCrops);
+
+// //delete all resource objects
+router.delete('/resource/', auth, developerController.deleteAllResources);
+
 //delete animal object
 router.delete('/animal/:animalId', auth, developerController.deleteAnimal);
 
@@ -61,17 +77,9 @@ router.delete('/crop/:cropId', auth, developerController.deleteCrop);
 //delete resource object
 router.delete('/resource/:resourceId', auth, developerController.deleteResource);
 
+
 //automate using resources
 router.patch('/use/resource/:resourceId', auth, developerController.useResource);
-
-// //delete all animal objects
-// router.delete('/animal/', auth, developerController.deleteAllAnimals);
-
-// //delete all crop objects
-// router.delete('/crop/', auth, developerController.deleteAllCrops);
-
-// //delete all resource objects
-// router.delete('/resource/', auth, developerController.deleteAllResources);
 
 router.get('/example', (req, res)=>{
     res.status(200).json(

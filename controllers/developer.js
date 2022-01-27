@@ -6,7 +6,7 @@ const Animal = mongoose.model('Animal');
 const Crop = mongoose.model('Crop');
 const Resource = mongoose.model('Resource');
 
-exports.signup = async (req, res)=> {
+exports.signup = async (req, res, next)=> {
     try{
     const name = req.body.name;
     const email = req.body.email;
@@ -28,35 +28,52 @@ exports.signup = async (req, res)=> {
     }
 }
 
-exports.getAll = async (req, res)=>{
-    // console.log(req.body);
+exports.resetPassword = async(req, res, next)=>{
     try{
-        console.log(req.headers.email);
-    let user = await User.findOne({
-        email: req.headers.email
-    });
-    let animals = await Animal.find({
-        _user: user._id
-    });
-    let crops = await Crop.find({
-        _user: user._id
-    });
-    let resources = await Resource.find({
-        _user: user._id
-    });
+        const email = req.headers.email;
+        const newPassword = md5(req.body.newPassword);
 
-    res.status(200).json({
-        animals: animals,
-        crops: crops,
-        resources: resources
-    });
+
+        await User.findOneAndUpdate({email: email}, {password: newPassword});
+        res.status(200).json({message: "Success in resetting password"});
+
     }
-    catch{
-        res.status(400).json({message: "Error in gathering data"})
+    catch(err){
+        res.send("404");
     }
 }
 
-exports.getAnimals = async (req, res)=>{
+exports.getAll = async (req, res, next)=>{
+    // console.log(req.body);
+    try{
+        console.log(req.headers.email);
+        let user = await User.findOne({
+            email: req.headers.email
+        });
+        let animals = await Animal.find({
+            _user: user._id
+        });
+        let crops = await Crop.find({
+            _user: user._id
+        });
+        let resources = await Resource.find({
+            _user: user._id
+        });
+
+        res.status(200).json({
+            animals: animals,
+            crops: crops,
+            resources: resources
+        });
+    }
+    catch(err){
+        let error = new Error("Error in gathering data");
+        error.httpStatusCode = 400;
+        next(error);
+    }
+}
+
+exports.getAnimals = async (req, res, next)=>{
     // console.log(req.body);
     try{
     let user = await User.findOne({
@@ -71,11 +88,13 @@ exports.getAnimals = async (req, res)=>{
     });
     }
     catch(err){
-        res.status(400).json({message: "Error in gathering animal data"})
+        let error = new Error("Error in gathering animal data");
+        error.httpStatusCode = 400;
+        next(error);
     }
 }
 
-exports.getCrops = async (req, res)=>{
+exports.getCrops = async (req, res, next)=>{
     // console.log(req.body);
     try{
     let user = await User.findOne({
@@ -89,11 +108,13 @@ exports.getCrops = async (req, res)=>{
     });
     }
     catch(err){
-        res.status(400).json("Error in gathering crop data");
+        let error = new Error("Error in gathering crop data");
+        error.httpStatusCode = 400;
+        next(error);
     }
 }
 
-exports.getResources = async (req, res)=>{
+exports.getResources = async (req, res, next)=>{
     // console.log(req.body);
     try{
     let user = await User.findOne({
@@ -107,41 +128,49 @@ exports.getResources = async (req, res)=>{
     });
     }
     catch(err){
-        res.status(400).json("Error in gathering resource data")
+        let error = new Error("Error in gathering resource data");
+        error.httpStatusCode = 400;
+        next(error);
     }
 }
 
-exports.getSpecificAnimal = async(req, res)=>{
+exports.getSpecificAnimal = async(req, res, next)=>{
     try{
         let animal = await Animal.findById(req.params.animalId);
         res.status(200).json(animal);
     }
     catch(err){
-            res.status(400).json("Error in gathering specific animal object")
+        let error = new Error("Error in gathering specific animal object");
+        error.httpStatusCode = 400;
+        next(error);
     }
 }
 
-exports.getSpecificCrop = async(req, res)=>{
+exports.getSpecificCrop = async(req, res, next)=>{
     try{
         let crop = await Crop.findById(req.params.cropId);
         res.status(200).json(crop);
     }
     catch(err){
-        res.status(400).json("Error in gathering specific crop object")
+        let error = new Error("Error in gathering specific crop object");
+        error.httpStatusCode = 400;
+        next(error);
     }
 }
 
-exports.getSpecificResource = async(req, res)=>{
+exports.getSpecificResource = async(req, res, next)=>{
     try{
         let resource = await Resource.findById(req.params.resourceId);
         res.status(200).json(resource);
     }
     catch(err){
-        res.status(400).json("Error in gathering specific resource object")
+        let error = new Error("Error in gathering specific resource object");
+        error.httpStatusCode = 400;
+        next(error);
     }
 }
 
-exports.addAnimal = async (req, res)=>{
+exports.addAnimal = async (req, res, next)=>{
     try {
     let user = await User.findOne({
         email:req.headers.email
@@ -155,11 +184,13 @@ exports.addAnimal = async (req, res)=>{
         await animal.save();
         res.status(200).json(animal);
     } catch (err) {
-        res.status(400).json({message: "Error in creating animal object"});
+        let error = new Error("Error in creating animal object");
+        error.httpStatusCode = 400;
+        next(error);
     }
 }
 
-exports.addCrop = async (req, res)=>{
+exports.addCrop = async (req, res, next)=>{
     try {
 
     let user = await User.findOne({
@@ -175,11 +206,13 @@ exports.addCrop = async (req, res)=>{
         await crop.save();
         res.status(200).json(crop);
     } catch (err) {
-        res.status(400).json({message: "Error in creating crop object"});
+        let error = new Error("Error in creating crop object");
+        error.httpStatusCode = 400;
+        next(error);
     }
 }
 
-exports.addResource = async (req, res)=>{
+exports.addResource = async (req, res, next)=>{
     try {
 
     let user = await User.findOne({
@@ -194,7 +227,9 @@ exports.addResource = async (req, res)=>{
         await resource.save();
         res.status(200).json(resource);
     } catch (err) {
-        res.status(400).json({message: "Error in creating resource object"});
+        let error = new Error("Error in creating resource object");
+        error.httpStatusCode = 400;
+        next(error);
     }
 }
 
@@ -202,7 +237,9 @@ exports.updateAnimal = async(req, res, next)=>{
 
     const animal = await Animal.findOneAndUpdate({_id: req.params.animalId}, {$set:req.body},{new: true}, function(err, foundAnimal){
         if(err){
-            res.status(400).json({message: "Error in updating animal object"});
+            let error = new Error("Error in updating animal object");
+            error.httpStatusCode = 400;
+            next(error);
 
         }else{
             res.status(200).json(foundAnimal);
@@ -214,7 +251,9 @@ exports.updateCrop = async(req, res, next)=>{
  
     const crop = await Crop.findOneAndUpdate({_id: req.params.cropId}, {$set:req.body},{new: true}, function(err, foundCrop){
         if(err){
-            res.status(400).json({message: "Error in updating crop object"});
+            let error = new Error("Error in updating crop object");
+            error.httpStatusCode = 400;
+            next(error);
 
         }else{
             res.status(200).json(foundCrop);
@@ -226,7 +265,9 @@ exports.updateResource = async(req, res, next)=>{
  
     const resource = await Resource.findOneAndUpdate({_id: req.params.resourceId}, {$set:req.body},{new: true}, function(err, foundResource){
         if(err){
-            res.status(400).json({message: "Error in updating resource object"});
+            let error = new Error("Error in updating resource object");
+            error.httpStatusCode = 400;
+            next(error);
 
         }else{
             res.status(200).json(foundResource);
@@ -238,7 +279,9 @@ exports.deleteAnimal = async(req, res, next)=>{
 
     const animal = await Animal.findOneAndDelete({_id: req.params.animalId}, function(err, foundAnimal){
         if(err){
-            res.status(400).json({message: "Error in deleting animal object"});
+            let error = new Error("Error in deleting animal object");
+            error.httpStatusCode = 400;
+            next(error);
 
         }else{
             res.status(200).json({message: "Succeed in deleting animal object"});
@@ -250,7 +293,9 @@ exports.deleteCrop = async(req, res, next)=>{
  
     const crop = await Crop.findOneAndDelete({_id: req.params.cropId}, function(err, foundCrop){
         if(err){
-            res.status(400).json({message: "Error in deleting crop object"});
+            let error = new Error("Error in deleting crop object");
+            error.httpStatusCode = 400;
+            next(error);
 
         }else{
             res.status(200).json({message: "Succeed in deleting crop object"});
@@ -259,22 +304,91 @@ exports.deleteCrop = async(req, res, next)=>{
 }
 
 exports.deleteResource = async(req, res, next)=>{
- 
     const resource = await Resource.findOneAndDelete({_id: req.params.resourceId}, function(err, foundResource){
         if(err){
-            res.status(400).json({message: "Error in deleting resource object"});
+            let error = new Error("Error in updating resource object");
+            error.httpStatusCode = 400;
+            next(error);
 
         }else{
             res.status(200).json({message: "Succeed in deleting resource object"});
         }
-    })        
+    })   
+}
+
+exports.deleteAllAnimals = async (req, res, next) =>{
+    try{
+        let user = await Animal.findOne({
+            email:req.headers.email
+        });
+    
+        await Animal.deleteMany({_user: user._id}).then(function(){
+            res.status(200).json({message: "Succeed in deleting animal objects"});
+        }).catch(function(err){
+            let error = new Error("Error in deleting animal objects");
+            error.httpStatusCode = 400;
+            next(error);
+        });
+    }
+    catch(err){
+        let error = new Error("Error in deleting animal objects");
+        error.httpStatusCode = 400;
+        next(error);
+    }   
+}
+
+exports.deleteAllCrops = async (req, res, next) =>{
+    try{
+        let user = await User.findOne({
+            email:req.headers.email
+        });
+    
+        await Crop.deleteMany({_user: user._id}).then(function(){
+            throw new Error();
+            res.status(200).json({message: "Succeed in deleting crop objects"});
+        }).catch(function(err){
+            let error = new Error("Error in deleting crop objects");
+            error.httpStatusCode = 400;
+            next(error);
+        });
+    }
+    catch(err){
+        let error = new Error("Error in deleting crop objects");
+        error.httpStatusCode = 400;
+        next(error);
+    }   
+}
+
+exports.deleteAllResources= async (req, res, next) =>{
+    try{
+        let user = await User.findOne({
+            email:req.headers.email
+        });
+    
+        await Resource.deleteMany({_user: user._id}).then(function(){
+            throw new Error();
+            res.status(200).json({message: "Succeed in deleting resource objects"});
+        }).catch(function(err){
+            let error = new Error("Error in deleting resource objects");
+            error.httpStatusCode = 400;
+            next(error);
+        });
+    }
+    catch(err){
+        let error = new Error("Error in deleting resource objects");
+        error.httpStatusCode = 400;
+        next(error);
+    }   
 }
 
 exports.useResource = async (req, res, next) =>{
     console.log(req.params.resourceId);
+    let error;
     const resource = await Resource.findById(req.params.resourceId, function(err){
         if(err){
-            res.status(400).json({message: "Error in using resource object when getting resourceId"});
+            error = new Error("Error in using resource object when getting resourceId");
+            error.httpStatusCode = 400;
+            next(error);
         }
     });
 
@@ -284,19 +398,19 @@ exports.useResource = async (req, res, next) =>{
     if(resourceLeft < 0) resourceLeft = 0;
     }
     catch(err){
-        res.status(400).json({message: "Error in using resource object"});
+        error = new Error("Error in using resource object");
+        error.httpStatusCode = 400;
+        next(error);
     }
 
     const resource2 = await Resource.findOneAndUpdate({_id: req.params.resourceId}, {$set: {quantity: resourceLeft}},{new: true}, function(err, foundResource){
         if(err){
-            res.status(400).json({message: "Error in using resource object"});
+            error = new Error("Error in using resource object");
+            error.httpStatusCode = 400;
+            next(error);
 
         }else{
             res.status(200).json(foundResource);
         }
     })       
 }
-
-// exports.deleteAllAnimals = async (req, res, next) =>{
-    
-// }

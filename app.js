@@ -18,10 +18,9 @@ app.use(bodyParser.json()); //for application/json
 
 mongoose.connect("mongodb://new_user1:" + process.env.MONGO_SECRET + "@cluster0-shard-00-00.ioc53.mongodb.net:27017,cluster0-shard-00-01.ioc53.mongodb.net:27017,cluster0-shard-00-02.ioc53.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-10i9e6-shard-0&authSource=admin&retryWrites=true&w=majority", {useNewUrlParser: true});
 
-
 app.use("/v1/", webRoutes);
 
-app.use("/v1/developer", developerRoutes);
+app.use("/v1/developer/", developerRoutes);
 
 app.use("/api-specs",  swaggerUi.serve);
 app.get("/api-specs", swaggerUi.setup(swaggerDocument));
@@ -35,6 +34,17 @@ app.get("/", (req, res) =>{
     res.send();
 })
 
+app.use((req, res, next)=>{
+    res.status(400).json({message: "Not found"});
+})
+
 app.listen(process.env.PORT || 2000, ()=>{
     console.log("Server started at port 2000");
+})
+
+//error handling
+app.use((err, req, res, next)=>{
+    if(err.httpStatusCode){
+        res.status(err.httpStatusCode).json({message: err.message});
+    }
 })
